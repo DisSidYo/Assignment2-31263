@@ -1,12 +1,12 @@
 fileFormatVersion: 2
-guid: a7c1118a2cd7be546a4e58b5740a29eb
+guid: f16a1922d85b9c741b9f5080ed7444a3
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
     mipMapMode: 0
-    enableMipMap: 1
+    enableMipMap: 0
     sRGBTexture: 1
     linearTexture: 0
     fadeOut: 0
@@ -37,10 +37,10 @@ TextureImporter:
     filterMode: 0
     aniso: 1
     mipBias: 0
-    wrapU: 0
-    wrapV: 0
+    wrapU: 1
+    wrapV: 1
     wrapW: 0
-  nPOTScale: 1
+  nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
   spriteMode: 2
@@ -52,7 +52,7 @@ TextureImporter:
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 0
   alphaUsage: 1
-  alphaIsTransparency: 0
+  alphaIsTransparency: 1
   spriteTessellationDetail: -1
   textureType: 8
   textureShape: 1
@@ -110,7 +110,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: PacStud_MoveDown_0
+      name: Ghost1_MoveLeft_0
       rect:
         serializedVersion: 2
         x: 0
@@ -124,14 +124,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: f6a0f6bc1080d8a4c852b6eca8651c25
-      internalID: 231503924
+      spriteID: f626234eb9c459b40a9d413eeb47126b
+      internalID: -405333466
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: PacStud_MoveDown_1
+      name: Ghost1_MoveLeft_1
       rect:
         serializedVersion: 2
         x: 16
@@ -145,14 +145,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 877eae468c145114595d9d2aae9de36d
-      internalID: -909949141
+      spriteID: 55b70ba7bb41d0e4987f36587d913875
+      internalID: -54049608
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: PacStud_MoveDown_2
+      name: Ghost1_MoveLeft_2
       rect:
         serializedVersion: 2
         x: 0
@@ -166,14 +166,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 6afc2ab184d719c4ebcc484028d155c4
-      internalID: -259461486
+      spriteID: c4df41ec1cce1c54091ae8f596d67be2
+      internalID: -195899204
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: PacStud_MoveDown_3
+      name: Ghost1_MoveLeft_3
       rect:
         serializedVersion: 2
         x: 16
@@ -187,8 +187,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 4c34b198b82f8384a9a4e8aff1fe4ec7
-      internalID: 787243978
+      spriteID: a85e40dafc2a17a469b74eefc495865c
+      internalID: 1179217087
       vertices: []
       indices: 
       edges: []
@@ -196,7 +196,7 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: d9da4e4af904064499943388a963e788
+    spriteID: 0cd92200d2077ae409dc76497f68168f
     internalID: 0
     vertices: []
     indices: 
@@ -204,10 +204,10 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      PacStud_MoveDown_0: 231503924
-      PacStud_MoveDown_1: -909949141
-      PacStud_MoveDown_2: -259461486
-      PacStud_MoveDown_3: 787243978
+      Ghost1_MoveLeft_0: -405333466
+      Ghost1_MoveLeft_1: -54049608
+      Ghost1_MoveLeft_2: -195899204
+      Ghost1_MoveLeft_3: 1179217087
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
