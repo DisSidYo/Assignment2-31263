@@ -207,7 +207,7 @@ public class LevelGenerator : MonoBehaviour
                         {
                             GameObject emptyGo = Instantiate(Empty, generatedRoot.transform);
                             emptyGo.name = Empty.name + "_" + emptyGo.GetInstanceID();
-                            emptyGo.transform.localPosition = new Vector3(c * cellSize, (rows - 1 - r) * cellSize, 0) + (Vector3)spawnOffset;
+                            emptyGo.transform.localPosition = new Vector3(c * cellSize, (rows - 1 - r) * cellSize, 0.5f) + (Vector3)spawnOffset;
                             emptyGo.transform.localRotation = Quaternion.identity;
                             emptyGo.transform.localScale = Vector3.one;
                         }
@@ -327,20 +327,23 @@ public class LevelGenerator : MonoBehaviour
                 //     return null;
 
                 // Try wall pairs first
-                if(wallCount == 2)
+                if (wallCount == 2)
                 {
                     if (up && right) return Quaternion.Euler(0, 0, 90);   // opening down-left
                     if (right && down) return Quaternion.Euler(0, 0, 0);  // opening up-left
                     if (down && left) return Quaternion.Euler(0, 0, 270); // opening up-right
                     if (left && up) return Quaternion.Euler(0, 0, 180);   // opening down-right
                 }
-                else if(wallCount == 3)
+                else if (wallCount == 3)
                 {
-                     if (up && left && down && !right)  return Quaternion.Euler(0, 0, 270); // bend into left-down
-                        if (up && right && down && !left)  return Quaternion.Euler(0, 0, 0);   // bend into right-down
-                        if (left && up && right && !down)  return Quaternion.Euler(0, 0, 90);  // bend into up-right
-                        if (left && down && right && !up)  return Quaternion.Euler(0, 0, 180); // bend into down-left       // opening right
-                }
+                    if (up && left && down && !right) return Quaternion.Euler(0, 0, 270); // bend into left-down
+                    if (up && right && down && !left) return Quaternion.Euler(0, 0, 0);   // bend into right-down
+                    if (left && up && right && !down) return Quaternion.Euler(0, 0, 90);  // bend into up-right
+                    if (left && down && right && !up) return Quaternion.Euler(0, 0, 180); // bend into down-left       // opening right
+                    
+                    }
+                
+
                 
                 
 
