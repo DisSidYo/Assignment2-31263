@@ -29,10 +29,10 @@ public class Pac_Stu_Move : MonoBehaviour
 
         pathPoints = new Vector3[]
         {
-            new Vector3(0.0f, 0.0f, 0.0f),
-            new Vector3(5.0f, 0.0f, 0.0f),
-            new Vector3(5.0f, -4.0f, 0.0f),
-            new Vector3(0.0f, -4.0f, 0.0f),
+            new Vector3(0.0f, 0.0f, -0.5f),
+            new Vector3(5.0f, 0.0f, -0.5f),
+            new Vector3(5.0f, -4.0f, -0.5f),
+            new Vector3(0.0f, -4.0f, -0.5f),
         };
 
         currentStartPos = pathPoints[0];
