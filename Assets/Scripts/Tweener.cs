@@ -17,19 +17,19 @@ public class Tweener : MonoBehaviour
     {
         if (activeTween != null)
         {
-            float distance = Vector3.Distance(activeTween.Target.position, activeTween.EndPos);
+            float distance = Vector3.Distance(activeTween.Target.anchoredPosition, activeTween.EndPos);
             float elapsedTime = Time.time - activeTween.StartTime;
             float t = elapsedTime / activeTween.Duration;
 
             if (t >= 1.0f)
             {
-                activeTween.Target.position = activeTween.EndPos;
+                activeTween.Target.anchoredPosition = activeTween.EndPos;
                 activeTween = null; // Tween finished
             }
             else
             {
                 // Lerp between StartPos and EndPos based on fraction
-                activeTween.Target.position = Vector3.Lerp(
+                activeTween.Target.anchoredPosition = Vector3.Lerp(
                         activeTween.StartPos,
                         activeTween.EndPos,
                         t
@@ -38,7 +38,7 @@ public class Tweener : MonoBehaviour
         }
 
     }
-    public bool AddTween(Transform target, Vector3 startPos, Vector3 endPos, float duration)
+    public bool AddTween(RectTransform target, Vector3 startPos, Vector3 endPos, float duration)
     {
         if (activeTween == null)
         {
