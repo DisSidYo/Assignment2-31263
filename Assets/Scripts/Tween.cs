@@ -5,7 +5,7 @@ using UnityEngine;
 public class Tween
 {
     // Start is called before the first frame update
-    public Transform Target { get; private set; }
+    public RectTransform Target { get; private set; }
 
     public Vector3 StartPos { get; private set; }
     public Vector3 EndPos { get; private set; }
@@ -14,7 +14,7 @@ public class Tween
 
     public float StartTime { get; private set; }
     
-    public Tween(Transform target, Vector3 startPos, Vector3 endPos, float startTime, float duration)
+    public Tween(RectTransform target, Vector3 startPos, Vector3 endPos, float startTime, float duration)
     {
         Target = target;
         StartPos = startPos;
