@@ -12,7 +12,7 @@ public class UIManager : MonoBehaviour
     Image innerBar;
     GameObject PlayerObj;
     Transform playerTransform;
-    GameObject quitButtonObj;
+    GameObject exitButtonObj;
 private Transform camTransform;
     Camera camera;
     private Tweener tweener;
@@ -62,6 +62,7 @@ void Start()
         SceneManager.LoadSceneAsync(1);
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
+    
 //     public void QuitGame()
 //     {
 // #if UNITY_EDITOR
@@ -77,26 +78,32 @@ void Start()
 //         SceneManager.sceneLoaded += OnSceneLoaded;
 //     }
 
+    public void GoToStartScene()
+{
+    // Optionally show a loading screen or fadeout later if you want
+    SceneManager.LoadScene(0);
+}
+
     private void OnDisable()
     {
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
     public void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        // if (scene.buildIndex == 0)
-        // {
-        //     camera = Camera.main;
-        //     // Assuming you have a Button component on the same GameObject as this script
-        //     quitButtonObj = GameObject.FindWithTag("QuitButton");
-        //     if (quitButtonObj != null)
-        //     {
-        //         Button quitButton = quitButtonObj.GetComponent<Button>();
-        //         if (quitButton != null)
-        //         {
-        //             quitButton.onClick.AddListener(QuitGame);
-        //         }
+        if (scene.buildIndex != 0)
+        {
+            camera = Camera.main;
+            // Assuming you have a Button component on the same GameObject as this script
+            exitButtonObj = GameObject.FindWithTag("Exit");
+            if (exitButtonObj != null)
+            {
+                Button exitButton = exitButtonObj.GetComponent<Button>();
+                if (exitButton != null)
+                {
+                    exitButton.onClick.AddListener(GoToStartScene);
+                }
 
-        //     }
+             }
         //     innerBarObj = GameObject.FindWithTag("PlayerHealthBar");
         //     if (innerBarObj != null)
         //         innerBar = innerBarObj.GetComponent<Image>();
@@ -110,14 +117,14 @@ void Start()
         //     // {
         //     //     innerBar.fillAmount = 1f;
         //     //     innerBar.color = Color.green;
-        //     // }
+            }
 
 
 
 
         //     Invoke(nameof(HideLoadingScreen), 1.0f);
-            SceneManager.sceneLoaded -= OnSceneLoaded;
-        }
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
     
     // private void RotateCamera()
     // {
@@ -145,6 +152,8 @@ void Start()
     //     RotateCamera();
     //     UpdateHealthBar();
     // }
+ 
+
     
 }
 
