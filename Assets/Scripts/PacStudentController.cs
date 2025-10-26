@@ -5,6 +5,7 @@ using UnityEngine;
 public class PacStudentController : MonoBehaviour
 {
     public Animator moveAnimator;
+    public ParticleSystem footstepParticles;
 
     private TweenerNormal tweener;
     private float moveDistance = 1.5f; 
@@ -146,6 +147,7 @@ public class PacStudentController : MonoBehaviour
                 {
                     footstepAudioSource.PlayOneShot(footstep);
                     lastPlayedTime = Time.time;
+                    footstepParticles.Play();
                 }
             }
             backgroundAudioSource.volume = 0.5f;
@@ -154,6 +156,7 @@ public class PacStudentController : MonoBehaviour
         {
             footstepAudioSource.Stop();
             backgroundAudioSource.volume = 1.0f;
+            footstepParticles.Pause();
         }
     }
 }
