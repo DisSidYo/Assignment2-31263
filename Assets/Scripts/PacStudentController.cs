@@ -4,121 +4,156 @@ using UnityEngine;
 
 public class PacStudentController : MonoBehaviour
 {
-    // Start is called before the first frame update
     public Animator moveAnimator;
 
-    private Vector3 currentDirection = Vector3.zero;
-    private bool isTweening = false;
     private TweenerNormal tweener;
-    private float moveDistance = 1f; // Distance to move in each tween
-    private float tweenDuration = 0.5f; // Duration of each tween
+    private float moveDistance = 1.5f; 
+    private float tweenDuration = 0.5f; 
 
-    private Vector3 movement;
-    private float movementSqrMagnitude;
+    private Vector3 currentDirection = Vector3.zero;
+    private Vector3 lastInput = Vector3.zero;
+    private Vector3 currentInput = Vector3.zero;
 
-    private bool IsMovementZero => movement == Vector3.zero;
-    private float moveSpeed = 5f;
+    private Vector2Int gridPos;
+    public AudioSource footstepAudioSource;
+    public AudioSource backgroundAudioSource;
 
-    // [SerializeField] private AsyncLoader asyncLoader;
+    private float lastPlayedTime = 0f;
+    private float footstepDelay = 0.7f; // seconds between sounds
+    public AudioClip footstep;
+    
+    
 
-    // private float ModifiedMoveSpeed => SpeedManager.SpeedModifier * movementSqrMagnitude;
     private int[,] levelMap = new int[,]
-    {
-        {1,2,2,2,2,2,2,2,2,2,2,2,2,7},
-        {2,5,5,5,5,5,5,5,5,5,5,5,5,4},
-        {2,5,3,4,4,3,5,3,4,4,4,3,5,4},
-        {2,6,4,0,0,4,5,4,0,0,0,4,5,4},
-        {2,5,3,4,4,3,5,3,4,4,4,3,5,3},
-        {2,5,5,5,5,5,5,5,5,5,5,5,5,5},
-        {2,5,3,4,4,3,5,3,3,5,3,4,4,4},
-        {2,5,3,4,4,3,5,4,4,5,3,4,4,3},
-        {2,5,5,5,5,5,5,4,4,5,5,5,5,4},
-        {1,2,2,2,2,1,5,4,3,4,4,3,0,4},
-        {0,0,0,0,0,2,5,4,3,4,4,3,0,3},
-        {0,0,0,0,0,2,5,4,4,0,0,0,0,0},
-        {0,0,0,0,0,2,5,4,4,0,3,4,4,8},
-        {2,2,2,2,2,1,5,3,3,0,4,0,0,0},
-        {0,0,0,0,0,0,5,0,0,0,4,0,0,0}
-    };   
+    
+{
+     {1,2,2,2,2,2,2,2,2,2,2,2,2,7,7,2,2,2,2,2,2,2,2,2,2,2,2,1},
+    {2,5,5,5,5,5,5,5,5,5,5,5,5,4,4,5,5,5,5,5,5,5,5,5,5,5,5,2},
+    {2,5,3,4,4,3,5,3,4,4,4,3,5,4,4,5,3,4,4,4,3,5,3,4,4,3,5,2},
+    {2,6,4,0,0,4,5,4,0,0,0,4,5,4,4,5,4,0,0,0,4,5,4,0,0,4,6,2},
+    {2,5,3,4,4,3,5,3,4,4,4,3,5,3,3,5,3,4,4,4,3,5,3,4,4,3,5,2},
+    {2,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,2},
+    {2,5,3,4,4,3,5,3,3,5,3,4,4,4,4,4,4,3,5,3,3,5,3,4,4,3,5,2},
+    {2,5,3,4,4,3,5,4,4,5,3,4,4,3,3,4,4,3,5,4,4,5,3,4,4,3,5,2},
+    {2,5,5,5,5,5,5,4,4,5,5,5,5,4,4,5,5,5,5,4,4,5,5,5,5,5,5,2},
+    {1,2,2,2,2,1,5,4,3,4,4,3,0,4,4,0,3,4,4,3,4,5,1,2,2,2,2,1},
+    {0,0,0,0,0,2,5,4,3,4,4,3,0,3,3,0,3,4,4,3,4,5,2,0,0,0,0,0},
+    {0,0,0,0,0,2,5,4,4,0,0,0,0,0,0,0,0,0,0,4,4,5,2,0,0,0,0,0},
+    {0,0,0,0,0,2,5,4,4,0,3,4,4,8,8,4,4,3,0,4,4,5,2,0,0,0,0,0},
+    {2,2,2,2,2,1,5,3,3,0,4,0,0,0,0,0,0,4,0,3,3,5,1,2,2,2,2,2},
+    {0,0,0,0,0,0,5,0,0,0,4,0,0,0,0,0,0,4,0,0,0,5,0,0,0,0,0,0},
+    {2,2,2,2,2,1,5,3,3,0,4,0,0,0,0,0,0,4,0,3,3,5,1,2,2,2,2,2},
+    {0,0,0,0,0,2,5,4,4,0,3,4,4,8,8,4,4,3,0,4,4,5,2,0,0,0,0,0},
+    {0,0,0,0,0,2,5,4,4,0,0,0,0,0,0,0,0,0,0,4,4,5,2,0,0,0,0,0},
+    {0,0,0,0,0,2,5,4,3,4,4,3,0,3,3,0,3,4,4,3,4,5,2,0,0,0,0,0},
+    {1,2,2,2,2,1,5,4,3,4,4,3,0,4,4,0,3,4,4,3,4,5,1,2,2,2,2,1},
+    {2,5,5,5,5,5,5,4,4,5,5,5,5,4,4,5,5,5,5,4,4,5,5,5,5,5,5,2},
+    {2,5,3,4,4,3,5,4,4,5,3,4,4,3,3,4,4,3,5,4,4,5,3,4,4,3,5,2},
+    {2,5,3,4,4,3,5,3,3,5,3,4,4,4,4,4,4,3,5,3,3,5,3,4,4,3,5,2},
+    {2,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,2},
+    {2,5,3,4,4,3,5,3,4,4,4,3,5,3,3,5,3,4,4,4,3,5,3,4,4,3,5,2},
+    {2,6,4,0,0,4,5,4,0,0,0,4,5,4,4,5,4,0,0,0,4,5,4,0,0,4,6,2},
+    {2,5,3,4,4,3,5,3,4,4,4,3,5,4,4,5,3,4,4,4,3,5,3,4,4,3,5,2},
+    {2,5,5,5,5,5,5,5,5,5,5,5,5,4,4,5,5,5,5,5,5,5,5,5,5,5,5,2},
+    {1,2,2,2,2,2,2,2,2,2,2,2,2,7,7,2,2,2,2,2,2,2,2,2,2,2,2,1},
+};
+
+
     void Start()
     {
-        moveAnimator.Play("Idle_Right");
         tweener = GetComponent<TweenerNormal>();
+        gridPos = new Vector2Int(1, 1);
+        currentInput = Vector3.right;
+        lastInput = Vector3.right;
+        moveAnimator.Play("Idle_Right");
     }
 
-    // Update is called once per frame
-    void Update () {
-        // if(asyncLoader)
-        // {
-        //     asyncLoader.pos = transform.position;
-        // }
-
-
+    void Update()
+    {
         GetMovementInput();
-        // CharacterRotation();
-        CharacterMovement();
-        WalkingAnimation();
-	}
 
+        if (!tweener.isTweening())
+        {
+            ContinueMovement();
+        }
+        FootstepAudio();
+    }
 
     void GetMovementInput()
     {
-        movement.x = Input.GetAxis("Horizontal");
-        movement.y = Input.GetAxis("Vertical");
-        movement = Vector3.ClampMagnitude(movement, 1.0f);
-        
+        Vector3 input = Vector3.zero;
+        if (Input.GetKey(KeyCode.W)) input = Vector3.up;
+        else if (Input.GetKey(KeyCode.S)) input = Vector3.down;
+        else if (Input.GetKey(KeyCode.A)) input = Vector3.left;
+        else if (Input.GetKey(KeyCode.D)) input = Vector3.right;
 
-       
-    }
-
-
-    // void CharacterRotation() {
-    //     if (!IsMovementZero) {
-    //         transform.rotation = Quaternion.LookRotation(movement, Vector3.up);
-    //     }
-    // }
-    void CharacterMovement() {
-        if (!isTweening)
+        if (input != Vector3.zero)
         {
-            if (Input.GetKey(KeyCode.W) && currentDirection != Vector3.up)
-            {
-                currentDirection = Vector3.up;
-                StartNewTween();
-                moveAnimator.Play("Pac_Stu_Up");
-            }
-            else if (Input.GetKey(KeyCode.S) && currentDirection != Vector3.down)
-            {
-                currentDirection = Vector3.down;
-                StartNewTween();
-                moveAnimator.Play("Pac_Stu_Down");
-            }
-            else if (Input.GetKey(KeyCode.A) && currentDirection != Vector3.left)
-            {
-                currentDirection = Vector3.left;
-                StartNewTween();
-                moveAnimator.Play("Pac_Stu_Left");
-            }
-            else if (Input.GetKey(KeyCode.D) && currentDirection != Vector3.right)
-            {
-                currentDirection = Vector3.right;
-                StartNewTween();
-                moveAnimator.Play("Pac_Stu_Right");
-            }
+            lastInput = input; // store buffered input
         }
     }
 
-    private void StartNewTween()
+    void ContinueMovement()
     {
-        Vector3 targetPos = transform.position + (currentDirection * moveDistance);
-        tweener.AddTween(transform, transform.position, targetPos, tweenDuration);
-        isTweening = true;
+        // Try current input first (feels more responsive)
+        if (CanMove(lastInput))
+        {
+            currentInput = lastInput;
+            StartNewTween(currentInput);
+        }
+        else if (CanMove(currentInput))
+        {
+            StartNewTween(currentInput);
+        }
+        else
+        {
+            moveAnimator.Play("Idle_Right");
+        }
     }
 
-    void WalkingAnimation()
+    bool CanMove(Vector3 dir)
     {
+        // Invert Y because array row 0 is the top row, while world Y increases upward
+        Vector2Int nextGrid = gridPos + new Vector2Int((int)dir.x, -(int)dir.y);
+        if (nextGrid.y < 0 || nextGrid.y >= levelMap.GetLength(0) ||
+            nextGrid.x < 0 || nextGrid.x >= levelMap.GetLength(1))
+            return false;
 
-        // moveAnimator.SetFloat("MoveSpeed", ModifiedMoveSpeed);
-        
-        
+        int tile = levelMap[nextGrid.y, nextGrid.x];
+        return tile == 0 || tile == 5 || tile == 6 || tile == 8;
+    }
+
+    void StartNewTween(Vector3 dir)
+    {
+        currentDirection = dir;
+        Vector3 targetPos = transform.position + dir * moveDistance;
+        tweener.AddTween(transform, transform.position, targetPos, tweenDuration);
+        // Update gridPos using inverted Y to match the array indexing
+        gridPos += new Vector2Int((int)dir.x, -(int)dir.y);
+
+        if (dir == Vector3.up) moveAnimator.Play("Pac_Stu_Up");
+        else if (dir == Vector3.down) moveAnimator.Play("Pac_Stu_Down");
+        else if (dir == Vector3.left) moveAnimator.Play("Pac_Stu_Left");
+        else if (dir == Vector3.right) moveAnimator.Play("Pac_Stu_Right");
+    }
+    void FootstepAudio()
+    {
+        if (tweener.isTweening()) 
+        {
+            if (!footstepAudioSource.isPlaying)
+            {
+                if (Time.time - lastPlayedTime >= footstepDelay)
+                {
+                    footstepAudioSource.PlayOneShot(footstep);
+                    lastPlayedTime = Time.time;
+                }
+            }
+            backgroundAudioSource.volume = 0.5f;
+        }
+        else
+        {
+            footstepAudioSource.Stop();
+            backgroundAudioSource.volume = 1.0f;
+        }
     }
 }
