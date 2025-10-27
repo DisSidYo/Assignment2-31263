@@ -7,9 +7,14 @@ public class PacStudentController : MonoBehaviour
     public Animator moveAnimator;
     public ParticleSystem footstepParticles;
 
+    public ParticleSystem wallHitParticles;
+    int x;
+    int y;
+    Vector3 newPosition;
+
     private TweenerNormal tweener;
-    private float moveDistance = 1.5f; 
-    private float tweenDuration = 0.5f; 
+    private float moveDistance = 1.5f;
+    private float tweenDuration = 0.5f;
 
     private Vector3 currentDirection = Vector3.zero;
     private Vector3 lastInput = Vector3.zero;
@@ -22,11 +27,15 @@ public class PacStudentController : MonoBehaviour
     private float lastPlayedTime = 0f;
     private float footstepDelay = 0.7f; // seconds between sounds
     public AudioClip footstep;
-    
-    
+
+    public AudioClip wallHit;
+    int check = 0;
+
+    private float wallHitCooldown = 0.5f;
+    private float lastWallHitTime = 0f;
 
     private int[,] levelMap = new int[,]
-    
+
 {
      {1,2,2,2,2,2,2,2,2,2,2,2,2,7,7,2,2,2,2,2,2,2,2,2,2,2,2,1},
     {2,5,5,5,5,5,5,5,5,5,5,5,5,4,4,5,5,5,5,5,5,5,5,5,5,5,5,2},
@@ -73,11 +82,13 @@ public class PacStudentController : MonoBehaviour
     {
         GetMovementInput();
 
+
         if (!tweener.isTweening())
         {
             ContinueMovement();
         }
         FootstepAudio();
+        wallHitAudio();
     }
 
     void GetMovementInput()
@@ -110,36 +121,65 @@ public class PacStudentController : MonoBehaviour
         {
             moveAnimator.Play("Idle_Right");
         }
+        
     }
 
     bool CanMove(Vector3 dir)
     {
-        // Invert Y because array row 0 is the top row, while world Y increases upward
         Vector2Int nextGrid = gridPos + new Vector2Int((int)dir.x, -(int)dir.y);
+
+        // Wrap around horizontally at tunnel
+        if (gridPos.y == 14)
+        {
+            if (gridPos.x == 0 && dir == Vector3.left)
+                nextGrid = new Vector2Int(27, gridPos.y);
+            else if (gridPos.x == 27 && dir == Vector3.right)
+                nextGrid = new Vector2Int(0, gridPos.y);
+        }
+
         if (nextGrid.y < 0 || nextGrid.y >= levelMap.GetLength(0) ||
             nextGrid.x < 0 || nextGrid.x >= levelMap.GetLength(1))
             return false;
 
         int tile = levelMap[nextGrid.y, nextGrid.x];
-        return tile == 0 || tile == 5 || tile == 6 || tile == 8;
+        return tile == 0 || tile == 5 || tile == 6;
     }
 
     void StartNewTween(Vector3 dir)
     {
         currentDirection = dir;
+        check = 0;
+
+        // Check if we're entering tunnel
+        if (gridPos.y == 14)
+        {
+            if (gridPos.x == 0 && dir == Vector3.left)
+            {
+                gridPos = new Vector2Int(27, gridPos.y);
+                transform.position = new Vector3(transform.position.x + moveDistance * 27, transform.position.y, 0);
+            }
+            else if (gridPos.x == 27 && dir == Vector3.right)
+            {
+                gridPos = new Vector2Int(0, gridPos.y);
+                transform.position = new Vector3(transform.position.x - moveDistance * 27, transform.position.y, 0);
+            }
+        }
+
+        // Update position & start tween normally
+        gridPos += new Vector2Int((int)dir.x, -(int)dir.y);
         Vector3 targetPos = transform.position + dir * moveDistance;
         tweener.AddTween(transform, transform.position, targetPos, tweenDuration);
-        // Update gridPos using inverted Y to match the array indexing
-        gridPos += new Vector2Int((int)dir.x, -(int)dir.y);
 
+        // Animation
         if (dir == Vector3.up) moveAnimator.Play("Pac_Stu_Up");
         else if (dir == Vector3.down) moveAnimator.Play("Pac_Stu_Down");
         else if (dir == Vector3.left) moveAnimator.Play("Pac_Stu_Left");
         else if (dir == Vector3.right) moveAnimator.Play("Pac_Stu_Right");
     }
+
     void FootstepAudio()
     {
-        if (tweener.isTweening()) 
+        if (tweener.isTweening())
         {
             if (!footstepAudioSource.isPlaying)
             {
@@ -157,6 +197,21 @@ public class PacStudentController : MonoBehaviour
             footstepAudioSource.Stop();
             backgroundAudioSource.volume = 1.0f;
             footstepParticles.Pause();
+        }
+    }
+    void wallHitAudio()
+    {
+        // guard: ensure audio components assigned
+        if (footstepAudioSource == null || wallHit == null) return;
+
+        // If player has a buffered input and that move is blocked, play wall hit once (with cooldown)
+        if (lastInput != Vector3.zero && !CanMove(lastInput))
+        {
+            if (check==0  ){
+                footstepAudioSource.PlayOneShot(wallHit);
+                lastWallHitTime = Time.time;
+                check = 1;
+            }
         }
     }
 }
