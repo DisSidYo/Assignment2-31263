@@ -8,6 +8,10 @@ public class PacStudentController : MonoBehaviour
     public Animator moveAnimator;
     public Tilemap tileMap;
     public ParticleSystem footstepParticles;
+    public GameObject pacStudentPrefab;
+
+    bool isDestroyed = true;
+
 
     public ParticleSystem wallHitParticles;
     int x;
@@ -37,6 +41,13 @@ public class PacStudentController : MonoBehaviour
 
     private float wallHitCooldown = 2f;
     private float lastWallHitTime = 0f;
+
+    Vector3 startPosition;
+    public ParticleSystem deathParticles;
+    public string deathAnimationState = "Pac_Stu_Death";
+    private bool isAlive = true;
+
+
 
     private int[,] levelMap = new int[,]
 
@@ -80,10 +91,34 @@ public class PacStudentController : MonoBehaviour
         currentInput = Vector3.right;
         lastInput = Vector3.right;
         moveAnimator.Play("Idle_Right");
+        startPosition = transform.position;
     }
 
     void Update()
     {
+        // If dead/waiting for respawn, check for player input to restart
+        if (!isAlive)
+        {
+
+            // player requested restart: re-enable and reset ghosts
+
+            isAlive = true;
+                if(isDestroyed)
+            Instantiate(pacStudentPrefab, startPosition, Quaternion.identity);
+                
+                transform.localScale = new Vector3(1.7f, 1.7f, 1f);
+                gridPos = new Vector2Int(1, 1);
+                moveAnimator.Play("Idle_Right");
+                // unfreeze ghosts
+                if (LevelManager.Instance != null)
+                {
+                    foreach (var g in LevelManager.Instance.ghosts)
+                        if (g != null) g.FreezeMovement(false);
+                }
+            
+            return; // skip normal update while waiting
+        }
+
         GetMovementInput();
 
         if (!tweener.isTweening())
@@ -261,7 +296,21 @@ public class PacStudentController : MonoBehaviour
 
     void CollectPellet()
     {
+        // Guard clause - check required components
+        if (tileMap == null)
+        {
+            Debug.LogError("PacStudentController: tileMap not assigned!");
+            return;
+        }
+
         Vector3Int tilePosition = new Vector3Int(gridPos.x - 3, -gridPos.y + 3, 0);
+
+        // Bounds check for levelMap array
+        if (gridPos.y < 0 || gridPos.y >= levelMap.GetLength(0) ||
+            gridPos.x < 0 || gridPos.x >= levelMap.GetLength(1))
+        {
+            return;
+        }
 
         int currentTile = levelMap[gridPos.y, gridPos.x];
         if (currentTile == 5 || currentTile == 6)
@@ -272,16 +321,25 @@ public class PacStudentController : MonoBehaviour
             // Update the levelMap
             levelMap[gridPos.y, gridPos.x] = 0;
 
-            // Add score based on pellet type
-            if (currentTile == 5) // normal pellet
+            // Add score based on pellet type (with null check for LevelManager)
+            if (LevelManager.Instance != null)
             {
-                LevelManager.Instance.AddScore(10);
+                if (currentTile == 5) // normal pellet
+                {
+                    LevelManager.Instance.AddScore(10);
+                }
+                else if (currentTile == 6) // power pellet
+                {
+                    LevelManager.Instance.AddScore(50);
+                    LevelManager.Instance.StartPowerMode();
+                }
             }
-            else if (currentTile == 6) // power pellet
+            else
             {
-                LevelManager.Instance.AddScore(50);
+                Debug.LogWarning("PacStudentController: LevelManager.Instance is null!");
             }
-            // Play pellet collection sound
+
+            // Play pellet collection sound (with null checks)
             if (footstepAudioSource != null && pelletCollect != null)
             {
                 footstepAudioSource.PlayOneShot(pelletCollect);
@@ -292,16 +350,52 @@ public class PacStudentController : MonoBehaviour
     {
         if (other.CompareTag("PowerPellet"))
         {
-            // Debug.Log("Power pellet collected!");
             Destroy(other.gameObject);
-            // TODO: trigger power mode, etc.
+            // handled via CollectPellet or tilemap; optional
         }
         if (other.CompareTag("Cherry"))
         {
-            // Debug.Log("Pellet collected!");
             Destroy(other.gameObject);
             LevelManager.Instance.AddScore(100);
         }
-    }
 
+        // Ghost collision handling
+        if (other.CompareTag("Ghost"))
+        {
+            GhostStateManager g = other.GetComponent<GhostStateManager>();
+            if (g == null) g = other.GetComponentInParent<GhostStateManager>();
+            if (g == null) return;
+
+            if (g.State == GhostState.Normal)
+            {
+                // PacStudent dies
+                isAlive = false;
+                // stop movement and tweens
+                if (tweener != null) { /* ideally remove active tween */ }
+                // play death particle and animation
+                if (deathParticles != null)
+                {
+                    deathParticles.transform.position = transform.position;
+                    deathParticles.Play();
+                }
+                if (moveAnimator != null && !string.IsNullOrEmpty(deathAnimationState))
+                    moveAnimator.Play("Pac_Stu_Death");
+
+                // float tt = Time.time;
+                // while (Time.time - tt < 3f) ;
+
+                isDestroyed = false;
+
+                Destroy(gameObject, 0.7f); // delay to allow animation/particles to play
+                isDestroyed = true;
+                // notify LevelManager (freezes + resets ghosts, updates lives)
+                if (LevelManager.Instance != null) LevelManager.Instance.HandlePacDeath(this);
+            }
+            else if (g.State == GhostState.Scared || g.State == GhostState.Recovering)
+            {
+                // ghost dies, award points
+                if (LevelManager.Instance != null) LevelManager.Instance.GhostEaten(g);
+            }
+        }
+    }
 }

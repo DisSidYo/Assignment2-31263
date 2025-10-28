@@ -9,6 +9,8 @@ TagManager:
   - Score
   - GameT
   - ScaredT
+  - Cherry
+  - Ghost
   layers:
   - Default
   - TransparentFX

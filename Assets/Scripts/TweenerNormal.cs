@@ -56,5 +56,9 @@ public class TweenerNormal : MonoBehaviour
     {
         return activeTween != null;
     }
+    public void CancelAllTweens()
+    {
+        activeTween = null;
+    }
 }
 
