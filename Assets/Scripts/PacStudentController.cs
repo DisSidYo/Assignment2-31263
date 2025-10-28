@@ -1,10 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class PacStudentController : MonoBehaviour
 {
     public Animator moveAnimator;
+    public Tilemap tileMap;
     public ParticleSystem footstepParticles;
 
     public ParticleSystem wallHitParticles;
@@ -29,9 +31,11 @@ public class PacStudentController : MonoBehaviour
     public AudioClip footstep;
 
     public AudioClip wallHit;
+
+    public AudioClip pelletCollect;
     int check = 0;
 
-    private float wallHitCooldown = 0.5f;
+    private float wallHitCooldown = 2f;
     private float lastWallHitTime = 0f;
 
     private int[,] levelMap = new int[,]
@@ -82,13 +86,14 @@ public class PacStudentController : MonoBehaviour
     {
         GetMovementInput();
 
-
         if (!tweener.isTweening())
         {
+            CollectPellet();
             ContinueMovement();
+            wallHitAudio();
+             // Check for pellet collection
         }
         FootstepAudio();
-        wallHitAudio();
     }
 
     void GetMovementInput()
@@ -207,11 +212,96 @@ public class PacStudentController : MonoBehaviour
         // If player has a buffered input and that move is blocked, play wall hit once (with cooldown)
         if (lastInput != Vector3.zero && !CanMove(lastInput))
         {
-            if (check==0  ){
-                footstepAudioSource.PlayOneShot(wallHit);
-                lastWallHitTime = Time.time;
+            if (check == 0)
+            {
+                // play sound (respect cooldown)
+                if (Time.time - lastWallHitTime >= wallHitCooldown)
+                {
+                    footstepAudioSource.PlayOneShot(wallHit);
+                    lastWallHitTime = Time.time;
+                }
+
+                // play particle effect at side based on movement direction
+                PlayWallHitEffect();
+
                 check = 1;
             }
         }
+        // else
+        // {
+        //     // reset so next blocked attempt can play again
+        //     check = 0;
+        // }
     }
+
+    // Play small dust/impact particle slightly offset from PacStudent in the movement direction.
+    void PlayWallHitEffect()
+    {
+        if (wallHitParticles == null) return;
+
+        // prefer currentDirection; fall back to lastInput if zero
+        Vector3 dir = currentDirection;
+        if (dir == Vector3.zero) dir = lastInput;
+
+        // choose a small offset relative to PacStudent's transform
+        float ox = 2f;
+        float oy = 2f;
+        Vector3 offset = Vector3.zero;
+
+        if (dir == Vector3.left) offset = new Vector3(-ox, 0f, 0f);
+        else if (dir == Vector3.right) offset = new Vector3(ox, 0f, 0f);
+        else if (dir == Vector3.up) offset = new Vector3(0f, oy, 0f);
+        else if (dir == Vector3.down) offset = new Vector3(0f, -oy, 0f);
+        else offset = new Vector3(0f, 0f, 0f);
+
+        wallHitParticles.transform.position = transform.position + offset;
+        if(!wallHitParticles.isPlaying)
+        wallHitParticles.Play();
+    }
+
+    void CollectPellet()
+    {
+        Vector3Int tilePosition = new Vector3Int(gridPos.x - 3, -gridPos.y + 3, 0);
+
+        int currentTile = levelMap[gridPos.y, gridPos.x];
+        if (currentTile == 5 || currentTile == 6)
+        {
+            // Destroy the tile in the tilemap
+            tileMap.SetTile(tilePosition, null);
+
+            // Update the levelMap
+            levelMap[gridPos.y, gridPos.x] = 0;
+
+            // Add score based on pellet type
+            if (currentTile == 5) // normal pellet
+            {
+                LevelManager.Instance.AddScore(10);
+            }
+            else if (currentTile == 6) // power pellet
+            {
+                LevelManager.Instance.AddScore(50);
+            }
+            // Play pellet collection sound
+            if (footstepAudioSource != null && pelletCollect != null)
+            {
+                footstepAudioSource.PlayOneShot(pelletCollect);
+            }
+        }
+    }
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("PowerPellet"))
+        {
+            // Debug.Log("Power pellet collected!");
+            Destroy(other.gameObject);
+            // TODO: trigger power mode, etc.
+        }
+        if (other.CompareTag("Cherry"))
+        {
+            // Debug.Log("Pellet collected!");
+            Destroy(other.gameObject);
+            LevelManager.Instance.AddScore(100);
+        }
+    }
+
 }

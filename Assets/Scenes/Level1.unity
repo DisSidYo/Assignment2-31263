@@ -5395,6 +5395,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 388897504}
   m_CullTransparentMesh: 1
+--- !u!1839735485 &402039060 stripped
+Tilemap:
+  m_CorrespondingSourceObject: {fileID: 5197544059628558376, guid: ae40aab79b6251d4ebe58095fd80bbda, type: 3}
+  m_PrefabInstance: {fileID: 9184105275284450588}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &451949739
 GameObject:
   m_ObjectHideFlags: 0
@@ -5708,6 +5713,11 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &562346297 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7463668289194689341, guid: 414d471b263a7cf42baa8a246108919a, type: 3}
+  m_PrefabInstance: {fileID: 1491479841181335933}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &655540719
 GameObject:
   m_ObjectHideFlags: 0
@@ -5720,6 +5730,7 @@ GameObject:
   - component: {fileID: 655540722}
   - component: {fileID: 655540721}
   - component: {fileID: 655540720}
+  - component: {fileID: 655540724}
   m_Layer: 5
   m_Name: HUD
   m_TagString: Untagged
@@ -5816,6 +5827,19 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &655540724
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 655540719}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 289e54a4a0aeb894eb5884cb96fa7c19, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scoreText: {fileID: 1965983145}
 --- !u!1 &667562403
 GameObject:
   m_ObjectHideFlags: 0
@@ -6010,6 +6034,42 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5193800126847101732, guid: 414d471b263a7cf42baa8a246108919a, type: 3}
   m_PrefabInstance: {fileID: 1491479841181335933}
   m_PrefabAsset: {fileID: 0}
+--- !u!58 &715215327
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 562346297}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: -0.0000019073486}
+  m_Radius: 0.5
 --- !u!1 &732938967
 GameObject:
   m_ObjectHideFlags: 0
@@ -6037,7 +6097,7 @@ Transform:
   m_GameObject: {fileID: 732938967}
   serializedVersion: 2
   m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 2.5411396, y: -11.109962, z: 0.56764436}
+  m_LocalPosition: {x: 0.82, y: -0.37, z: 0.6}
   m_LocalScale: {x: 0.58823526, y: 1, z: 0.5882352}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -6086,7 +6146,7 @@ ParticleSystemRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_RenderMode: 0
   m_MeshDistribution: 0
   m_SortMode: 0
@@ -6136,7 +6196,7 @@ ParticleSystem:
   emitterVelocityMode: 1
   looping: 0
   prewarm: 0
-  playOnAwake: 1
+  playOnAwake: 0
   useUnscaledTime: 0
   autoRandomSeed: 1
   startDelay:
@@ -6192,7 +6252,7 @@ ParticleSystem:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-  moveWithTransform: 0
+  moveWithTransform: 1
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
   randomSeed: 0
@@ -6202,7 +6262,7 @@ ParticleSystem:
     startLifetime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 5
+      scalar: 1
       minScalar: 5
       maxCurve:
         serializedVersion: 2
@@ -6255,7 +6315,7 @@ ParticleSystem:
     startSpeed:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 5
+      scalar: 3
       minScalar: 5
       maxCurve:
         serializedVersion: 2
@@ -6697,7 +6757,7 @@ ParticleSystem:
     gravityModifier:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 0
+      scalar: 1
       minScalar: 0
       maxCurve:
         serializedVersion: 2
@@ -7059,8 +7119,66 @@ ParticleSystem:
         m_PreInfinity: 2
         m_PostInfinity: 2
         m_RotationOrder: 4
-    m_BurstCount: 0
-    m_Bursts: []
+    m_BurstCount: 1
+    m_Bursts:
+    - serializedVersion: 2
+      time: 0
+      countCurve:
+        serializedVersion: 2
+        minMaxState: 0
+        scalar: 30
+        minScalar: 30
+        maxCurve:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 1
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          - serializedVersion: 3
+            time: 1
+            value: 1
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        minCurve:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 1
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          - serializedVersion: 3
+            time: 1
+            value: 1
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+      cycleCount: 1
+      repeatInterval: 0.01
+      probability: 1
   SizeModule:
     enabled: 0
     curve:
@@ -11079,6 +11197,10 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: -1943081178, guid: 57c4d584b7d8ed644a117062aa0986da, type: 3}
+    - target: {fileID: 1288202017652837398, guid: 64f2e099c90809448a5212d7aaa2b9bd, type: 3}
+      propertyPath: m_SortingOrder
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1890189817641452927, guid: 64f2e099c90809448a5212d7aaa2b9bd, type: 3}
       propertyPath: m_Name
       value: Pac_Stu
@@ -11109,15 +11231,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6116091909006386428, guid: 64f2e099c90809448a5212d7aaa2b9bd, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -9.49
+      value: -9.43
       objectReference: {fileID: 0}
     - target: {fileID: 6116091909006386428, guid: 64f2e099c90809448a5212d7aaa2b9bd, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 8.81
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 6116091909006386428, guid: 64f2e099c90809448a5212d7aaa2b9bd, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6116091909006386428, guid: 64f2e099c90809448a5212d7aaa2b9bd, type: 3}
       propertyPath: m_LocalRotation.w
@@ -11165,6 +11287,12 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1890189817641452927, guid: 64f2e099c90809448a5212d7aaa2b9bd, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1596996282}
+    - targetCorrespondingSourceObject: {fileID: 1890189817641452927, guid: 64f2e099c90809448a5212d7aaa2b9bd, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1596996286}
+    - targetCorrespondingSourceObject: {fileID: 1890189817641452927, guid: 64f2e099c90809448a5212d7aaa2b9bd, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1596996285}
   m_SourcePrefab: {fileID: 100100000, guid: 64f2e099c90809448a5212d7aaa2b9bd, type: 3}
 --- !u!1 &904505066
 GameObject:
@@ -12249,10 +12377,10 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 281969565}
-  - {fileID: 2141405556}
   - {fileID: 715215324}
   - {fileID: 2073588549}
   - {fileID: 1958386306}
+  - {fileID: 2141405556}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1399461372
@@ -12407,11 +12535,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveAnimator: {fileID: 1596996276}
+  tileMap: {fileID: 402039060}
   footstepParticles: {fileID: 20303098}
+  wallHitParticles: {fileID: 732938970}
   footstepAudioSource: {fileID: 1596996283}
   backgroundAudioSource: {fileID: 561167594}
   footstep: {fileID: 8300000, guid: b2fd97ee5f1ba524a9ae025aa0eaa680, type: 3}
   wallHit: {fileID: 8300000, guid: 8abc2c0ec74e7ee428bd0dc7880344e4, type: 3}
+  pelletCollect: {fileID: 8300000, guid: 3883cb7d21d702043aa90620d8334dd8, type: 3}
 --- !u!114 &1596996282
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12429,6 +12560,70 @@ AudioSource:
   m_CorrespondingSourceObject: {fileID: 4896533503086271507, guid: 64f2e099c90809448a5212d7aaa2b9bd, type: 3}
   m_PrefabInstance: {fileID: 900846350}
   m_PrefabAsset: {fileID: 0}
+--- !u!50 &1596996285
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1596996271}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
+--- !u!70 &1596996286
+CapsuleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1596996271}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0.50000095, y: -0.00000047683716}
+  m_Size: {x: 0.99999994, y: 0.99999994}
+  m_Direction: 0
 --- !u!1001 &1619177938
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -12651,9 +12846,10 @@ GameObject:
   - component: {fileID: 1958386306}
   - component: {fileID: 1958386308}
   - component: {fileID: 1958386307}
+  - component: {fileID: 1958386309}
   m_Layer: 0
   m_Name: Power_Pellet (3)
-  m_TagString: Untagged
+  m_TagString: PowerPellet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -12749,6 +12945,42 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!58 &1958386309
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1958386305}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0}
+  m_Radius: 0.5
 --- !u!1 &1965983143
 GameObject:
   m_ObjectHideFlags: 0
@@ -13100,9 +13332,10 @@ GameObject:
   - component: {fileID: 2073588549}
   - component: {fileID: 2073588551}
   - component: {fileID: 2073588550}
+  - component: {fileID: 2073588552}
   m_Layer: 0
   m_Name: Power_Pellet (2)
-  m_TagString: Untagged
+  m_TagString: PowerPellet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -13198,6 +13431,42 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!58 &2073588552
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2073588548}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: -0.0000019073486}
+  m_Radius: 0.5
 --- !u!1 &2087611761
 GameObject:
   m_ObjectHideFlags: 0
@@ -13447,9 +13716,10 @@ GameObject:
   - component: {fileID: 2141405556}
   - component: {fileID: 2141405558}
   - component: {fileID: 2141405557}
+  - component: {fileID: 2141405559}
   m_Layer: 0
   m_Name: Power_Pellet (1)
-  m_TagString: Untagged
+  m_TagString: PowerPellet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -13463,7 +13733,7 @@ Transform:
   m_GameObject: {fileID: 2141405555}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.42865562, y: -1.1146636, z: 0}
+  m_LocalPosition: {x: 0.42865577, y: -1.1146635, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -13545,6 +13815,42 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!58 &2141405559
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2141405555}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0}
+  m_Radius: 0.5
 --- !u!1001 &1491479841181335933
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -13597,10 +13903,17 @@ PrefabInstance:
       propertyPath: m_Name
       value: Power_Pellet
       objectReference: {fileID: 0}
+    - target: {fileID: 7463668289194689341, guid: 414d471b263a7cf42baa8a246108919a, type: 3}
+      propertyPath: m_TagString
+      value: PowerPellet
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7463668289194689341, guid: 414d471b263a7cf42baa8a246108919a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 715215327}
   m_SourcePrefab: {fileID: 100100000, guid: 414d471b263a7cf42baa8a246108919a, type: 3}
 --- !u!1001 &9184105275284450588
 PrefabInstance:
