@@ -383,11 +383,10 @@ public class PacStudentController : MonoBehaviour
             {
                 // PacStudent dies
                 isAlive = false;
-                
+
                 // Disable components instead of destroying
-                if (spriteRenderer != null) spriteRenderer.enabled = false;
-                if (pacCollider != null) pacCollider.enabled = false;
                 
+
                 if (deathParticles != null)
                 {
                     deathParticles.transform.position = transform.position;
@@ -397,8 +396,9 @@ public class PacStudentController : MonoBehaviour
                     moveAnimator.Play("Pac_Stu_Death");
 
                 footstepAudioSource.PlayOneShot(LevelManager.Instance.pacDeathSound);
+                Invoke(nameof(dis), 3f);
 
-                if (LevelManager.Instance != null) 
+                if (LevelManager.Instance != null)
                     LevelManager.Instance.HandlePacDeath(this);
 
                 // Schedule automatic respawn after death animation
@@ -410,6 +410,11 @@ public class PacStudentController : MonoBehaviour
                 if (LevelManager.Instance != null) LevelManager.Instance.GhostEaten(g);
             }
         }
+    }
+    void dis()
+    {
+        if (spriteRenderer != null) spriteRenderer.enabled = false;
+                if (pacCollider != null) pacCollider.enabled = false;
     }
 
     // Add this method if not already present
