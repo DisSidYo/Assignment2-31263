@@ -5,6 +5,14 @@ TagManager:
   serializedVersion: 2
   tags:
   - Exit
+  - PowerPellet
+  - Score
+  - GameT
+  - ScaredT
+  - Cherry
+  - Ghost
+  - HighScoreText
+  - Button
   layers:
   - Default
   - TransparentFX

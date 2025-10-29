@@ -28,7 +28,7 @@ public class CherryController : MonoBehaviour
         center = position;
 
         // Start the spawn timer so first spawn occurs spawnDelay seconds after scene start
-        nextSpawnTime = Time.time + spawnDelay;
+        nextSpawnTime = Time.time + spawnDelay+4f;
     }
 
     void Update()
@@ -56,7 +56,7 @@ public class CherryController : MonoBehaviour
                 if (vp.x < 0f || vp.x > 1f || vp.y < 0f || vp.y > 1f) outsideCamera = true;
             }
 
-            if (outsideBounds || outsideCamera)
+            if (outsideBounds || outsideCamera  || !tweener.isTweening())
             {
                 Destroy(currentCherry);
                 currentCherry = null;
@@ -75,28 +75,28 @@ public class CherryController : MonoBehaviour
         Vector3 dir = (center - spawnPos).normalized;
         Camera cam = Camera.main;
         Vector3 endPos;
-        if (cam != null && cam.orthographic)
-        {
-            Vector3 camCenter = cam.transform.position;
-            float halfH = cam.orthographicSize;
-            float halfW = halfH * cam.aspect;
+        // if (cam != null && cam.orthographic)
+        // {
+        //     Vector3 camCenter = cam.transform.position;
+        //     float halfH = cam.orthographicSize;
+        //     float halfW = halfH * cam.aspect;
 
-            // compute t where camCenter + dir * t hits a camera edge along x or y
-            float tx = (Mathf.Approximately(dir.x, 0f)) ? float.PositiveInfinity : (halfW / Mathf.Abs(dir.x));
-            float ty = (Mathf.Approximately(dir.y, 0f)) ? float.PositiveInfinity : (halfH / Mathf.Abs(dir.y));
+        //     // compute t where camCenter + dir * t hits a camera edge along x or y
+        //     float tx = (Mathf.Approximately(dir.x, 0f)) ? float.PositiveInfinity : (halfW / Mathf.Abs(dir.x));
+        //     float ty = (Mathf.Approximately(dir.y, 0f)) ? float.PositiveInfinity : (halfH / Mathf.Abs(dir.y));
 
-            // choose the smaller t so the point is just beyond whichever edge is hit first
-            float t = Mathf.Min(tx, ty);
-            // place end position 1 unit beyond that edge along the same line
-            endPos = camCenter + dir * (t + 1f);
-            // keep z consistent with level (0)
-            endPos.z = 0f;
-        }
-        else
-        {
+        //     // choose the smaller t so the point is just beyond whichever edge is hit first
+        //     float t = Mathf.Min(tx, ty);
+        //     // place end position 1 unit beyond that edge along the same line
+        //     endPos = camCenter + dir * (t + 1f);
+        //     // keep z consistent with level (0)
+        //     endPos.z = 0f;
+        // }
+        // else
+        // {
             // fallback: mirror spawn through center (previous behavior)
-            endPos = center + (center - spawnPos);
-        }
+        endPos = center + (center - spawnPos);
+        // }
 
         // Instantiate the cherry
         currentCherry = Instantiate(cherryPrefab, spawnPos, Quaternion.identity);
