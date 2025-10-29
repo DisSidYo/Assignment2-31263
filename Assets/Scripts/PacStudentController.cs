@@ -47,6 +47,7 @@ public class PacStudentController : MonoBehaviour
     public string deathAnimationState = "Pac_Stu_Death";
     private bool isAlive = true;
 
+    private float deathAnimationDuration = 3.0f; // Adjust this to match your death animation length
 
 
     private int[,] levelMap = new int[,]
@@ -84,39 +85,27 @@ public class PacStudentController : MonoBehaviour
 };
 
 
+    private SpriteRenderer spriteRenderer;
+    private Collider2D pacCollider;
+
     void Start()
     {
         tweener = GetComponent<TweenerNormal>();
         gridPos = new Vector2Int(1, 1);
-        currentInput = Vector3.right;
-        lastInput = Vector3.right;
-        moveAnimator.Play("Idle_Right");
+        // wait for player input before starting
+        currentInput = Vector3.zero;
+        lastInput = Vector3.zero;
+        moveAnimator.Play("Idle_Right"); // still show idle visually
         startPosition = transform.position;
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        pacCollider = GetComponent<Collider2D>();
     }
 
     void Update()
     {
-        // If dead/waiting for respawn, check for player input to restart
         if (!isAlive)
         {
-
-            // player requested restart: re-enable and reset ghosts
-
-            isAlive = true;
-                if(isDestroyed)
-            Instantiate(pacStudentPrefab, startPosition, Quaternion.identity);
-                
-                transform.localScale = new Vector3(1.7f, 1.7f, 1f);
-                gridPos = new Vector2Int(1, 1);
-                moveAnimator.Play("Idle_Right");
-                // unfreeze ghosts
-                if (LevelManager.Instance != null)
-                {
-                    foreach (var g in LevelManager.Instance.ghosts)
-                        if (g != null) g.FreezeMovement(false);
-                }
-            
-            return; // skip normal update while waiting
+            return; // Skip movement while dead
         }
 
         GetMovementInput();
@@ -126,7 +115,6 @@ public class PacStudentController : MonoBehaviour
             CollectPellet();
             ContinueMovement();
             wallHitAudio();
-             // Check for pellet collection
         }
         FootstepAudio();
     }
@@ -166,6 +154,8 @@ public class PacStudentController : MonoBehaviour
 
     bool CanMove(Vector3 dir)
     {
+        // don't consider zero input as a valid move
+        if (dir == Vector3.zero) return false;
         Vector2Int nextGrid = gridPos + new Vector2Int((int)dir.x, -(int)dir.y);
 
         // Wrap around horizontally at tunnel
@@ -370,9 +360,11 @@ public class PacStudentController : MonoBehaviour
             {
                 // PacStudent dies
                 isAlive = false;
-                // stop movement and tweens
-                if (tweener != null) { /* ideally remove active tween */ }
-                // play death particle and animation
+                
+                // Disable components instead of destroying
+                if (spriteRenderer != null) spriteRenderer.enabled = false;
+                if (pacCollider != null) pacCollider.enabled = false;
+                
                 if (deathParticles != null)
                 {
                     deathParticles.transform.position = transform.position;
@@ -381,21 +373,41 @@ public class PacStudentController : MonoBehaviour
                 if (moveAnimator != null && !string.IsNullOrEmpty(deathAnimationState))
                     moveAnimator.Play("Pac_Stu_Death");
 
-                // float tt = Time.time;
-                // while (Time.time - tt < 3f) ;
+                footstepAudioSource.PlayOneShot(LevelManager.Instance.pacDeathSound);
 
-                isDestroyed = false;
+                if (LevelManager.Instance != null) 
+                    LevelManager.Instance.HandlePacDeath(this);
 
-                Destroy(gameObject, 0.7f); // delay to allow animation/particles to play
-                isDestroyed = true;
-                // notify LevelManager (freezes + resets ghosts, updates lives)
-                if (LevelManager.Instance != null) LevelManager.Instance.HandlePacDeath(this);
+                // Schedule automatic respawn after death animation
+                Invoke(nameof(Respawn), deathAnimationDuration);
             }
             else if (g.State == GhostState.Scared || g.State == GhostState.Recovering)
             {
                 // ghost dies, award points
                 if (LevelManager.Instance != null) LevelManager.Instance.GhostEaten(g);
             }
+        }
+    }
+
+    // Add this method if not already present
+    void Respawn()
+    {
+        isAlive = true;
+        if (spriteRenderer != null) spriteRenderer.enabled = true;
+        if (pacCollider != null) pacCollider.enabled = true;
+        transform.position = startPosition;
+        transform.localScale = new Vector3(1.7f, 1.7f, 1f);
+        gridPos = new Vector2Int(1, 1);
+        // clear buffered input so we wait again for player input
+        currentInput = Vector3.zero;
+        lastInput = Vector3.zero;
+        moveAnimator.Play("Idle_Right");
+
+        // Unfreeze ghosts
+        if (LevelManager.Instance != null)
+        {
+            foreach (var g in LevelManager.Instance.ghosts)
+                if (g != null) g.FreezeMovement(false);
         }
     }
 }

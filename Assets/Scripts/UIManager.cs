@@ -3,11 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-
+using TMPro;
 public class UIManager : MonoBehaviour
 {
     // Start is called before the first frame update
     [SerializeField] private RectTransform loadingPanel;
+
+    [SerializeField] private TextMeshProUGUI timerText;
+
+    [SerializeField] private TextMeshProUGUI LoadText;
     GameObject innerBarObj;
     Image innerBar;
     GameObject PlayerObj;
@@ -16,14 +20,29 @@ public class UIManager : MonoBehaviour
 private Transform camTransform;
     Camera camera;
     private Tweener tweener;
+    private int countdownValue = 5;
 void Start()
-{
+    {
+
+        // if (loadingPanel)
+        // {
+        //     Debug.Log("Setting loading panel size");
+        //     loadingPanel.sizeDelta = new Vector2(Screen.width, Screen.height);
+        // }
         // camTransform = Camera.main.transform;
         // if (loadingPanel)
         // {
         //     loadingPanel.sizeDelta = new Vector2(Screen.width, Screen.height);
         // }
-        // Invoke(nameof(HideLoadingScreen), 1.0f);
+        // Invoke(nameof(HideLoadingScreen), 1f);
+        
+        if (loadingPanel)
+        {
+            loadingPanel.sizeDelta = new Vector2(Screen.width, Screen.height);
+            //loadingPanel.gameObject.SetActive(false); // Hide panel at start
+        }
+    
+        Invoke(nameof(HideLoadingScreen), 1.0f);
         
 }
 
@@ -48,21 +67,87 @@ void Start()
 
 
     }
-    
-    
-    public void LoadFirstLevel()
+     private void HideLoadingScreen()
     {
-        
-        Invoke(nameof(AsyncLoadFirstLevel), 1.0f);
-
+        if (loadingPanel && tweener)
+        {
+            //loadingPanel.gameObject.SetActive(false);
+            LoadText.text = "";
+            Vector3 startPos = Vector2.zero;
+            Vector3 endPos = new Vector2(0, -Screen.height);
+            tweener.AddTween(loadingPanel, startPos, endPos, 0.2f);
+        }
     }
+    private void ShowLoadingScreen()
+    {
+        if (loadingPanel && tweener)
+        {
+            //loadingPanel.gameObject.SetActive(true);
+            // LoadText.text = "Loading...";
+            //    yield return new WaitForSeconds(0.15f);
+
+            // countdown 3..1
+            // for (int i = 3; i >= 1; i--)
+            // {
+            //     LoadText.text = i.ToString();
+            //     yield return new WaitForSeconds(1f);
+            // }
+
+            // // GO!
+            // LoadText.text = "GO!";
+            // yield return new WaitForSeconds(1f);
+            ShowNextCountdownNumber();
+           Vector3 startPos = new Vector2(0, -Screen.height);
+            Vector3 endPos = Vector2.zero;
+            tweener.AddTween(loadingPanel, startPos, endPos, 0.2f);
+        }
+    }
+    private void AnimateLoadingPanel()
+    {
+         
+    }
+    private void ShowNextCountdownNumber()
+{
+    if (countdownValue > 1)
+        {
+            if (countdownValue == 2)
+            {
+                // Reset for next time
+                LoadText.text = "GO!";
+            }
+            else
+            {
+                LoadText.text = (countdownValue - 2).ToString();
+            }
+        
+        countdownValue--;
+        
+        // call again after 1 second
+        Invoke(nameof(ShowNextCountdownNumber), 1f);
+    }
+    else
+    {
+        // show GO! then animate
+        
+        // Invoke(nameof(AnimateLoadingPanel), 1f);
+    }
+}
+    
+  
     private void AsyncLoadFirstLevel()
     {
 
         SceneManager.LoadSceneAsync(1);
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
-    
+      public void LoadFirstLevel()
+    {
+
+        ShowLoadingScreen();
+        Invoke(nameof(AsyncLoadFirstLevel), 0.1f);
+        
+
+    }
 //     public void QuitGame()
 //     {
 // #if UNITY_EDITOR
@@ -122,7 +207,8 @@ void Start()
 
 
 
-        //     Invoke(nameof(HideLoadingScreen), 1.0f);
+        Invoke(nameof(HideLoadingScreen), 4.0f);
+        
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
     
