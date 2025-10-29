@@ -251,7 +251,7 @@ void OnDisable()
 
         Invoke(nameof(HideLoadingScreen), 4.0f);
         
-        // SceneManager.sceneLoaded -= OnSceneLoaded;
+       
     }
 
     // private void RotateCamera()
@@ -335,10 +335,10 @@ public void UpdateHighScoreDisplay()
 
     int minutes = (int)(bestTime / 60);
     int seconds = (int)(bestTime % 60);
-    int milliseconds = (int)((bestTime * 1000) % 1000);
+    int milliseconds = (int)((bestTime * 100) % 100);
 
     string formattedTime = $"{minutes:00}:{seconds:00}:{milliseconds:000}";
-    highScoreText.text = $" Play Level 1  High Score: {highScore}   Best Time: {formattedTime}";
+    highScoreText.text = $" Play Level 1  High Score: {highScore:D6}   Best Time: {formattedTime}";
 }
 
 

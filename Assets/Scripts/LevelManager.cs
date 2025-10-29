@@ -82,10 +82,11 @@ public class LevelManager : MonoBehaviour
 
             int minutes = (int)(elapsedTime / 60f);
             int seconds = (int)(elapsedTime % 60f);
-            int milliseconds = (int)((elapsedTime * 1000f) % 1000f);
+            int milliseconds = (int)((elapsedTime * 100f) % 100f);
 
             if (timerText)
-                timerText.text = $"{minutes:00}:{seconds:00}:{milliseconds:000}";
+                timerText.text = $"Game Timer\n{minutes:00}:{seconds:00}:{milliseconds:00}";
+
         }
         if (powerActive)
         {
@@ -198,7 +199,7 @@ public class LevelManager : MonoBehaviour
 
     void UpdateScoreUI()
     {
-        if (scoreText != null) scoreText.text = score.ToString()+"/"+pelletCount.ToString();
+        if (scoreText != null) scoreText.text = scoreText.text = "SCORE:\n" + score.ToString("D6");
     }
 
     void UpdateLivesUI()

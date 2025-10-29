@@ -2568,6 +2568,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Button
       objectReference: {fileID: 0}
+    - target: {fileID: 5462320352619823488, guid: 02b1070b3a2ca3c4d9a66e7920b7045b, type: 3}
+      propertyPath: m_TagString
+      value: Button
+      objectReference: {fileID: 0}
     - target: {fileID: 5555628357827549849, guid: 02b1070b3a2ca3c4d9a66e7920b7045b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 

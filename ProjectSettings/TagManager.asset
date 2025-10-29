@@ -12,6 +12,7 @@ TagManager:
   - Cherry
   - Ghost
   - HighScoreText
+  - Button
   layers:
   - Default
   - TransparentFX
