@@ -1,15 +1,21 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using System.Collections; // ✅ CORRECT — this one includes IEnumerator
+
 
 public class LevelManager : MonoBehaviour
 {
     public static LevelManager Instance { get; private set; }
+    private const string HighScoreKey = "HighScore";
+    private const string BestTimeKey = "BestTime"; // store in seconds as float
 [SerializeField] private TextMeshProUGUI timerText;
     public RectTransform laodingPanel;
+    
 
-    public GameObject panel;
+    [SerializeField] private RectTransform panel;
     public int score = 0;
+    public int pelletCount = 0;
     public TextMeshProUGUI scoreText;
 
     [Header("Lives")]
@@ -34,6 +40,7 @@ public class LevelManager : MonoBehaviour
     private bool powerActive = false;
     private float powerTimer = 0f;
     private bool recoveringEntered = false;
+    public int pelletEaten = 0;
 
     // ghost-eaten respawn bookkeeping
     class DeadGhostRecord { public GhostStateManager ghost; public float timer; }
@@ -70,16 +77,16 @@ public class LevelManager : MonoBehaviour
     void Update()
     {
         if (timerRunning)
-    {
-        elapsedTime += Time.deltaTime;
+        {
+            elapsedTime += Time.deltaTime;
 
-        int minutes = (int)(elapsedTime / 60f);
-        int seconds = (int)(elapsedTime % 60f);
-        int milliseconds = (int)((elapsedTime * 1000f) % 1000f);
+            int minutes = (int)(elapsedTime / 60f);
+            int seconds = (int)(elapsedTime % 60f);
+            int milliseconds = (int)((elapsedTime * 1000f) % 1000f);
 
-        if (timerText)
-            timerText.text = $"{minutes:00}:{seconds:00}:{milliseconds:000}";
-    }
+            if (timerText)
+                timerText.text = $"{minutes:00}:{seconds:00}:{milliseconds:000}";
+        }
         if (powerActive)
         {
             powerTimer -= Time.deltaTime;
@@ -127,17 +134,71 @@ public class LevelManager : MonoBehaviour
                 }
             }
         }
+        if ((lives <= 0 && timerRunning) || (pelletEaten - pelletCount == 0 && timerRunning))
+        {
+            EndGame();
+        }
     }
+    // void EndGame()
+    // {
+    //     timerRunning = false;
+    //     if (musicSource != null)
+    //     {
+    //         musicSource.Stop();
+    //     }
+    //     UIManager.Instance.ShowGameOverScreen();
+    //     StartCoroutine(ReturnToMenuAfterDelay());
+    // }
+    private void EndGame()
+    {
+        timerRunning = false;
+
+        // Fetch previous records
+        int prevHighScore = PlayerPrefs.GetInt(HighScoreKey, 0);
+        float prevBestTime = PlayerPrefs.GetFloat(BestTimeKey, float.MaxValue);
+
+        int currentScore = score;
+        float currentTime = elapsedTime;
+        if (currentScore > prevHighScore || 
+           (currentScore == prevHighScore && currentTime < prevBestTime))
+        {
+            PlayerPrefs.SetInt(HighScoreKey, currentScore);
+            PlayerPrefs.SetFloat(BestTimeKey, currentTime);
+            PlayerPrefs.Save();
+        }
+
+       
+        if (UIManager.Instance != null)
+        {
+            UIManager.Instance.ShowGameOverScreen();
+            StartCoroutine(ReturnToMenuAfterDelay());
+        }
+    }
+    private IEnumerator ReturnToMenuAfterDelay()
+        {
+            yield return new WaitForSeconds(3f); // show "Game Over" for 3 seconds
+            UIManager.Instance.HideGameOverScreen();
+            yield return new WaitForSeconds(1f);
+            UIManager.Instance.GoToStartScene();
+        }
 
     public void AddScore(int amount)
     {
         score += amount;
         UpdateScoreUI();
     }
+    public void TotalPellet(int amount)
+    {
+        pelletCount = amount;
+    }
+    public void AddPelletEaten(int amount)
+    {
+        pelletEaten+= amount;
+    }
 
     void UpdateScoreUI()
     {
-        if (scoreText != null) scoreText.text = score.ToString();
+        if (scoreText != null) scoreText.text = score.ToString()+"/"+pelletCount.ToString();
     }
 
     void UpdateLivesUI()

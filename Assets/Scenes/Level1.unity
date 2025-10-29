@@ -5560,7 +5560,7 @@ Transform:
   m_GameObject: {fileID: 464585657}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -23.5, y: -0.46, z: -0.05708683}
+  m_LocalPosition: {x: -23.2, y: 5.7, z: -0.05708683}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -5841,8 +5841,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   timerText: {fileID: 981374365}
   laodingPanel: {fileID: 1521335376}
-  panel: {fileID: 1697354691}
+  panel: {fileID: 1697354692}
   score: 0
+  pelletCount: 0
   scoreText: {fileID: 1965983145}
   lives: 3
   livesText: {fileID: 775145868}
@@ -5859,6 +5860,7 @@ MonoBehaviour:
   - {fileID: 1214946462}
   - {fileID: 738468745}
   - {fileID: 676313559}
+  pelletEaten: 0
 --- !u!82 &655540725
 AudioSource:
   m_ObjectHideFlags: 0
@@ -6258,7 +6260,7 @@ CircleCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: -0.0000019073486}
-  m_Radius: 0.5
+  m_Radius: 0.2
 --- !u!1 &732938967
 GameObject:
   m_ObjectHideFlags: 0
@@ -12819,7 +12821,7 @@ Transform:
   m_GameObject: {fileID: 1399461372}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -26.97, y: 10.17, z: -0.05708683}
+  m_LocalPosition: {x: -22.25, y: 2.52, z: -0.05708683}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -13137,7 +13139,7 @@ CapsuleCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0.50000095, y: -0.00000047683716}
-  m_Size: {x: 0.99999994, y: 0.99999994}
+  m_Size: {x: 0.8, y: 0.8}
   m_Direction: 0
 --- !u!1001 &1619177938
 PrefabInstance:
@@ -18385,7 +18387,7 @@ CircleCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
-  m_Radius: 0.5
+  m_Radius: 0.2
 --- !u!1 &1965983143
 GameObject:
   m_ObjectHideFlags: 0
@@ -18871,7 +18873,7 @@ CircleCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: -0.0000019073486}
-  m_Radius: 0.5
+  m_Radius: 0.2
 --- !u!1 &2087611761
 GameObject:
   m_ObjectHideFlags: 0
@@ -19255,7 +19257,7 @@ CircleCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
-  m_Radius: 0.5
+  m_Radius: 0.2
 --- !u!1001 &1491479841181335933
 PrefabInstance:
   m_ObjectHideFlags: 0

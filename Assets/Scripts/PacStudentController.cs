@@ -38,6 +38,7 @@ public class PacStudentController : MonoBehaviour
 
     public AudioClip pelletCollect;
     int check = 0;
+    int TotalPellets = 0;
 
     private float wallHitCooldown = 2f;
     private float lastWallHitTime = 0f;
@@ -99,10 +100,13 @@ public class PacStudentController : MonoBehaviour
         startPosition = transform.position;
         spriteRenderer = GetComponent<SpriteRenderer>();
         pacCollider = GetComponent<Collider2D>();
+        totalCalc();    
     }
 
     void Update()
     {
+        
+
         if (!isAlive)
         {
             return; // Skip movement while dead
@@ -173,6 +177,23 @@ public class PacStudentController : MonoBehaviour
 
         int tile = levelMap[nextGrid.y, nextGrid.x];
         return tile == 0 || tile == 5 || tile == 6;
+    }
+    void totalCalc()
+    {
+        for(int i=0;i<levelMap.GetLength(0);i++)
+        {
+            for(int j=0;j<levelMap.GetLength(1);j++)    
+            {
+                if(levelMap[i,j]==5 || levelMap[i,j]==6)
+                {
+                    TotalPellets++;
+                }
+            }
+        }
+        if(LevelManager.Instance!=null)
+        {
+            LevelManager.Instance.TotalPellet(TotalPellets);
+        }
     }
 
     void StartNewTween(Vector3 dir)
@@ -317,10 +338,12 @@ public class PacStudentController : MonoBehaviour
                 if (currentTile == 5) // normal pellet
                 {
                     LevelManager.Instance.AddScore(10);
+                    LevelManager.Instance.AddPelletEaten(1);
                 }
                 else if (currentTile == 6) // power pellet
                 {
                     LevelManager.Instance.AddScore(50);
+                    LevelManager.Instance.AddPelletEaten(1);
                     LevelManager.Instance.StartPowerMode();
                 }
             }

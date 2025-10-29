@@ -11,6 +11,7 @@ TagManager:
   - ScaredT
   - Cherry
   - Ghost
+  - HighScoreText
   layers:
   - Default
   - TransparentFX

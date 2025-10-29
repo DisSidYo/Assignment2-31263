@@ -28,7 +28,7 @@ public class CherryController : MonoBehaviour
         center = position;
 
         // Start the spawn timer so first spawn occurs spawnDelay seconds after scene start
-        nextSpawnTime = Time.time + spawnDelay;
+        nextSpawnTime = Time.time + spawnDelay+4f;
     }
 
     void Update()
